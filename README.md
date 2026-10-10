@@ -1,7 +1,8 @@
 # pathmodel demo
 
 A static site for [`@aleksei-chernyi/pathmodel`](https://www.npmjs.com/package/@aleksei-chernyi/pathmodel)
-([source](https://github.com/aleksei-chernyi/pathmodel)) with two pages:
+([source](https://github.com/aleksei-chernyi/pathmodel)) with two pages,
+live at https://aleksei-chernyi.github.io/pathmodel-demo/:
 
 - **Quick start** (`#/`): the specification, with a live form in the header. The text lives in
   `src/docs/quick-start.md`.
@@ -34,7 +35,7 @@ server rewrites and works from any sub-path.
 | Host | Settings |
 | --- | --- |
 | Netlify / Vercel / Cloudflare Pages | Build command `npm run build`, output directory `dist` |
-| GitHub Pages | Push `dist/` to a `gh-pages` branch, or use a Pages workflow with the same build |
+| GitHub Pages | `.github/workflows/deploy.yml` builds and deploys every push to `main` (set **Settings → Pages → Source** to **GitHub Actions**) |
 | Anything else | Upload the contents of `dist/` |
 
 The playground bundles the TypeScript compiler (about 1 MB gzipped). It only loads on the
