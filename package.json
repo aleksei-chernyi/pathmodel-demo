@@ -16,7 +16,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@aleksei-chernyi/pathmodel": "^0.1.0",
+    "@aleksei-chernyi/pathmodel": "^0.1.1",
     "@codemirror/commands": "^6.8.1",
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/view": "^6.38.0",
