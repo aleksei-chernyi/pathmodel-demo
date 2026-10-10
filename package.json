@@ -1,0 +1,39 @@
+{
+  "name": "pathmodel-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Quick start and playground for @aleksei-chernyi/pathmodel",
+  "license": "MIT",
+  "author": "Aleksei Chernyi <4er.aleksei@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleksei-chernyi/pathmodel-demo.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@aleksei-chernyi/pathmodel": "^0.1.0",
+    "@codemirror/commands": "^6.8.1",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/view": "^6.38.0",
+    "codemirror": "^6.0.2",
+    "highlight.js": "^11.12.0",
+    "marked": "^18.1.0",
+    "marked-highlight": "^2.2.4",
+    "reflect-metadata": "^0.2.2",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.43",
+    "vue-router": "^5.4.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@standard-schema/spec": "^1.1.0",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "sass": "^1.105.1",
+    "vite": "^8.3.4"
+  }
+}
