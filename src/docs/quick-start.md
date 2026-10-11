@@ -156,24 +156,24 @@ Call `buildSchema()` before you read or write values: it fills the dot path map.
 
 ## Decorators
 
-| Decorator | Target | Purpose |
-| --- | --- | --- |
-| `@Schema(options)` | property | A field `{ component, dotPath, props?, options? }`, or a layout container `{ component, label?, props?, options? }`. |
-| `@Nested({ type })` | property | The property is a nested form of class `type`. It is created automatically. |
-| `@NestedArray({ items })` | property | An array of nested forms, one instance per class in `items`, in order. |
-| `@FormOptions(options)` | class | The options passed to this class when it is created as a nested form. |
+| Decorator                 | Target   | Purpose                                                                                                              |
+| ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| `@Schema(options)`        | property | A field `{ component, dotPath, props?, options? }`, or a layout container `{ component, label?, props?, options? }`. |
+| `@Nested({ type })`       | property | The property is a nested form of class `type`. It is created automatically.                                          |
+| `@NestedArray({ items })` | property | An array of nested forms, one instance per class in `items`, in order.                                               |
+| `@FormOptions(options)`   | class    | The options passed to this class when it is created as a nested form.                                                |
 
 A nested property needs both decorators: `@Schema` with a **layout** component decides how it
 renders, and `@Nested` / `@NestedArray` decides what it contains.
 
 ### Field options
 
-| Option | Type | Description |
-| --- | --- | --- |
-| `default` | `unknown` | The initial value. Otherwise `null`. |
-| `required` | `boolean` | An empty value is an error. |
-| `requiredMessage` | `string` | Error text for an empty required field. |
-| `rules` | Standard Schema | Checks the value when it is not empty. |
+| Option            | Type            | Description                             |
+| ----------------- | --------------- | --------------------------------------- |
+| `default`         | `unknown`       | The initial value. Otherwise `null`.    |
+| `required`        | `boolean`       | An empty value is an error.             |
+| `requiredMessage` | `string`        | Error text for an empty required field. |
+| `rules`           | Standard Schema | Checks the value when it is not empty.  |
 
 ### Field props
 
@@ -199,10 +199,10 @@ Two prop keys have special meaning for the renderer:
 
 `FormOptionsInterface`, set with `@FormOptions` or passed to the root constructor:
 
-| Option | Description |
-| --- | --- |
-| `title` | Shown as the tab or step label of array items. |
-| `namespace?` | Dot path prefix used to count a step's validation errors. |
+| Option         | Description                                                                                                                      |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `title`        | Shown as the tab or step label of array items.                                                                                   |
+| `namespace?`   | Dot path prefix used to count a step's validation errors.                                                                        |
 | `keepInValue?` | Defaults to `true`. If `false`, the form's fields are left out of `getFormValue()`; for a `FormCase`, unless the case is active. |
 
 ## Components
@@ -211,12 +211,12 @@ Every node has a Vue `component`, which is either a **field** or a **layout**.
 
 **Field components** receive these props:
 
-| Prop | Description |
-| --- | --- |
-| `node` | The `FieldNode`: `getValue()`, `setValue(v)`, `getProps()`, `isRequired()` |
-| `root` | The root form |
-| `error` / `fieldError` | The current error text |
-| `hasError` | `true` when the field has an error |
+| Prop                   | Description                                                                |
+| ---------------------- | -------------------------------------------------------------------------- |
+| `node`                 | The `FieldNode`: `getValue()`, `setValue(v)`, `getProps()`, `isRequired()` |
+| `root`                 | The root form                                                              |
+| `error` / `fieldError` | The current error text                                                     |
+| `hasError`             | `true` when the field has an error                                         |
 
 **Layout components** declare their kind and render children through the default slot:
 
@@ -234,13 +234,13 @@ defineOptions({ __kind: COMPONENT_KIND.LAYOUT })
 
 ### Bundled layouts
 
-| Layout | Renders |
-| --- | --- |
-| `Row` / `Col` | A `div.form__row` / `div.form__col` |
-| `Wrapper` | A `div` with `options.className` (default `form-wrapper`) and an optional `options.title` |
-| `Switch` | Tabs, one per case of a `FormSwitch` |
-| `Stepper` | Numbered steps that validate before moving forward |
-| `Empty` | Nothing. A field that uses it is skipped. |
+| Layout        | Renders                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| `Row` / `Col` | A `div.form__row` / `div.form__col`                                                       |
+| `Wrapper`     | A `div` with `options.className` (default `form-wrapper`) and an optional `options.title` |
+| `Switch`      | Tabs, one per case of a `FormSwitch`                                                      |
+| `Stepper`     | Numbered steps that validate before moving forward                                        |
+| `Empty`       | Nothing. A field that uses it is skipped.                                                 |
 
 All of them are imported by path, for example
 `@aleksei-chernyi/pathmodel/src/layout/Wrapper.vue`.
@@ -284,12 +284,12 @@ class Checkout extends FormSwitch {
 }
 ```
 
-| Method | Description |
-| --- | --- |
+| Method                    | Description                                      |
+| ------------------------- | ------------------------------------------------ |
 | `toggleActiveCase(value)` | Activates the case whose `_case` equals `value`. |
-| `setActiveCaseIndex(i)` | Activates a case by position. |
-| `unlockCaseIndex(i)` | Lets the stepper reach steps up to `i`. |
-| `resetCaseProgress()` | Locks all steps after the first again. |
+| `setActiveCaseIndex(i)`   | Activates a case by position.                    |
+| `unlockCaseIndex(i)`      | Lets the stepper reach steps up to `i`.          |
+| `resetCaseProgress()`     | Locks all steps after the first again.           |
 
 The stepper moves forward only when `validate()` passes for the current step. Each step shows
 a badge with its error count, matched by field dot paths, `validationErrorPaths` and the case
@@ -348,7 +348,7 @@ form.setValueSchema(
 ### Running validation
 
 ```ts
-const ok = await form.validate()              // whole form; replaces all errors
+const ok = await form.validate() // whole form; replaces all errors
 const stepOk = await form.validate(step.children) // only these nodes
 ```
 
@@ -371,21 +371,21 @@ form.setValidationErrors({ "contacts.email": ["This email is already registered"
 
 ### FormBase
 
-| Method | Description |
-| --- | --- |
-| `buildSchema()` | Builds the node tree and the dot path map. Call it first. |
-| `getFormValue()` / `setFormValue(value)` | Reads or writes the whole value. |
-| `setValueByDotPath(path, value)` | Writes every field mapped to the path and clears that path's errors. |
-| `validate(nodes?)` | Runs field rules and the value schema, stores errors, resolves to `true` if there are none. |
-| `setValueSchema(schema)` | Sets or clears (`null`) the schema for the whole value. |
+| Method                                   | Description                                                                                 |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `buildSchema()`                          | Builds the node tree and the dot path map. Call it first.                                   |
+| `getFormValue()` / `setFormValue(value)` | Reads or writes the whole value.                                                            |
+| `setValueByDotPath(path, value)`         | Writes every field mapped to the path and clears that path's errors.                        |
+| `validate(nodes?)`                       | Runs field rules and the value schema, stores errors, resolves to `true` if there are none. |
+| `setValueSchema(schema)`                 | Sets or clears (`null`) the schema for the whole value.                                     |
 
 ### Errors
 
-| Method | Description |
-| --- | --- |
-| `setValidationErrors(errors)` | Sets errors, for example from a server. Call it on the root form. |
-| `getValidationError(path)` / `getValidationErrors()` | The first error for a path, or all errors. |
-| `getValidationErrorByPaths(paths)` | The first error across several paths. `*` matches one segment. |
-| `getValidationErrorsCount(ns)` | Counts errors under a namespace prefix. |
-| `getValidationErrorsCountByPaths(paths)` | Counts errors across paths (wildcards allowed). |
-| `clearValidationError(path)` / `clearValidationErrors()` | Clears one path, or all errors. |
+| Method                                                   | Description                                                       |
+| -------------------------------------------------------- | ----------------------------------------------------------------- |
+| `setValidationErrors(errors)`                            | Sets errors, for example from a server. Call it on the root form. |
+| `getValidationError(path)` / `getValidationErrors()`     | The first error for a path, or all errors.                        |
+| `getValidationErrorByPaths(paths)`                       | The first error across several paths. `*` matches one segment.    |
+| `getValidationErrorsCount(ns)`                           | Counts errors under a namespace prefix.                           |
+| `getValidationErrorsCountByPaths(paths)`                 | Counts errors across paths (wildcards allowed).                   |
+| `clearValidationError(path)` / `clearValidationErrors()` | Clears one path, or all errors.                                   |

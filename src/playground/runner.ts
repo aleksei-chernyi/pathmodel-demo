@@ -1,28 +1,18 @@
 import ts from "typescript"
 import * as vue from "vue"
 import * as zod from "zod"
-import * as pathmodel from "@aleksei-chernyi/pathmodel"
 import { FormBase } from "@aleksei-chernyi/pathmodel"
-import Row from "@aleksei-chernyi/pathmodel/src/layout/Row.vue"
-import Col from "@aleksei-chernyi/pathmodel/src/layout/Col.vue"
-import Wrapper from "@aleksei-chernyi/pathmodel/src/layout/Wrapper.vue"
-import Switch from "@aleksei-chernyi/pathmodel/src/layout/Switch.vue"
-import Stepper from "@aleksei-chernyi/pathmodel/src/layout/Stepper.vue"
-import Case from "@aleksei-chernyi/pathmodel/src/layout/Case.vue"
-import Empty from "@aleksei-chernyi/pathmodel/src/layout/Empty.vue"
-import TextInput from "../fields/TextInput.vue"
-import NumberInput from "../fields/NumberInput.vue"
-import Checkbox from "../fields/Checkbox.vue"
-import Select from "../fields/Select.vue"
+import * as pathmodel from "./modules/pathmodel"
+import * as fields from "./modules/fields"
 
+const { Row, Col, Wrapper, Switch, Stepper, Case, Empty } = pathmodel
 const layouts = { Row, Col, Wrapper, Switch, Stepper, Case, Empty }
-const fields = { TextInput, NumberInput, Checkbox, Select }
 
 const LIBRARY = "@aleksei-chernyi/pathmodel"
 
 /** Modules the playground code can import. */
 const modules: Record<string, unknown> = {
-  [LIBRARY]: { ...pathmodel, ...layouts },
+  [LIBRARY]: pathmodel,
   ...Object.fromEntries(
     Object.entries(layouts).map(([name, component]) => [
       `${LIBRARY}/src/layout/${name}.vue`,

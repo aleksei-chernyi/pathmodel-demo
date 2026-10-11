@@ -5,15 +5,19 @@
         <p class="hero__eyebrow">TypeScript · Vue 3 · Standard Schema</p>
         <h1>Forms as classes,<br />values as dot paths.</h1>
         <p class="hero__lead">
-          Describe your data as a tree of decorated TypeScript classes. pathmodel binds every
-          field to a dot path, validates it with Zod or any Standard Schema library, and renders
-          the whole tree as a Vue form.
+          Describe your data as a tree of decorated TypeScript classes. pathmodel binds every field
+          to a dot path, validates it with Zod or any Standard Schema library, and renders the whole
+          tree as a Vue form.
         </p>
         <div class="hero__cta">
           <RouterLink to="/playground" class="pg-button pg-button--primary pg-button--large">
             Open the playground
           </RouterLink>
-          <a href="#installation" class="pg-button pg-button--large" @click.prevent="go('installation')">
+          <a
+            href="#installation"
+            class="pg-button pg-button--large"
+            @click.prevent="go('installation')"
+          >
             Get started
           </a>
         </div>

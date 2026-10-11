@@ -16,6 +16,12 @@ export default defineConfig({
   resolve: {
     alias: [{ find: /^@aleksei-chernyi\/pathmodel$/, replacement: librarySource }],
   },
+  // Dev pre-bundling ignores the `oxc` options below, so the library's declared-only fields
+  // (e.g. `FormSwitch.cases`) would become `undefined` class fields. Serve it like app code.
+  optimizeDeps: {
+    exclude: ["@aleksei-chernyi/pathmodel"],
+    include: ["@aleksei-chernyi/pathmodel > reflect-metadata"],
+  },
   // Class field semantics of `tsc` with `useDefineForClassFields: false` (see the library README).
   oxc: {
     assumptions: { setPublicClassFields: true },

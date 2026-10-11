@@ -13,7 +13,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit && vue-tsc --noEmit -p src/playground/examples",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@aleksei-chernyi/pathmodel": "^0.1.1",
@@ -33,7 +36,9 @@
   "devDependencies": {
     "@standard-schema/spec": "^1.1.0",
     "@vitejs/plugin-vue": "^6.0.10",
+    "prettier": "^3.9.10",
     "sass": "^1.105.1",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vue-tsc": "^3.3.13"
   }
 }

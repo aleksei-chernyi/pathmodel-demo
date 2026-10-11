@@ -18,7 +18,13 @@ npm install
 npm run dev        # http://localhost:5176
 npm run build      # static site in dist/
 npm run preview    # serve dist/ locally
+npm run typecheck  # the app, and the playground examples
+npm run format     # Prettier (CI runs format:check)
 ```
+
+The playground examples are real files in `src/playground/examples/`, loaded as text with
+`?raw`, so Prettier formats them and `typecheck` checks them against the modules the playground
+offers (`src/playground/modules/`, see `src/playground/examples/tsconfig.json`).
 
 ## The library
 
@@ -32,11 +38,11 @@ single copy of the library in the bundle. To update it, run `npm install @alekse
 The build is plain static files with hash routing and relative asset paths, so it needs no
 server rewrites and works from any sub-path.
 
-| Host | Settings |
-| --- | --- |
-| Netlify / Vercel / Cloudflare Pages | Build command `npm run build`, output directory `dist` |
-| GitHub Pages | `.github/workflows/deploy.yml` builds and deploys every push to `main` (set **Settings → Pages → Source** to **GitHub Actions**) |
-| Anything else | Upload the contents of `dist/` |
+| Host                                | Settings                                                                                                                         |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Netlify / Vercel / Cloudflare Pages | Build command `npm run build`, output directory `dist`                                                                           |
+| GitHub Pages                        | `.github/workflows/deploy.yml` builds and deploys every push to `main` (set **Settings → Pages → Source** to **GitHub Actions**) |
+| Anything else                       | Upload the contents of `dist/`                                                                                                   |
 
 The playground bundles the TypeScript compiler (about 1 MB gzipped). It only loads on the
 playground page and for the live demo on the Quick start page, after the text has rendered.
