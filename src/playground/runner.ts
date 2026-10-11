@@ -81,11 +81,33 @@ function playgroundRequire(name: string) {
   return modules[name]
 }
 
-/**
- * Compiles and runs the code, and returns the root form. The code must `export default`
- * either a form class (created with `{ title: "Playground" }`) or a form instance.
- */
+/** Called with the reactive root form: `actions` become buttons, `display` values a live panel. */
+export type FormFunctions = Record<string, (form: any) => unknown>
+
+export interface PlaygroundModule {
+  form: FormBase
+  actions: FormFunctions
+  display: FormFunctions
+}
+
+/** Keeps only the function entries of an optional `actions` / `display` export. */
+function functionsOf(value: unknown): FormFunctions {
+  if (!value || typeof value !== "object") return {}
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entry]) => typeof entry === "function")
+  ) as FormFunctions
+}
+
+/** Compiles and runs the code, and returns the root form. See `runModule`. */
 export function run(source: string): FormBase {
+  return runModule(source).form
+}
+
+/**
+ * Compiles and runs the code. The code must `export default` either a form class (created with
+ * `{ title: "Playground" }`) or a form instance. It may also export `actions` and `display`.
+ */
+export function runModule(source: string): PlaygroundModule {
   const code = compile(source)
   const module = { exports: {} as Record<string, any> }
 
@@ -113,5 +135,9 @@ export function run(source: string): FormBase {
     )
   }
 
-  return form
+  return {
+    form,
+    actions: functionsOf(module.exports.actions),
+    display: functionsOf(module.exports.display),
+  }
 }

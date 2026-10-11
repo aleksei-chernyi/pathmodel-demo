@@ -9,7 +9,10 @@ live at https://aleksei-chernyi.github.io/pathmodel-demo/:
 - **Playground** (`#/playground`): write form classes on the left and see the rendered form,
   its value, errors and schema tree on the right. **Copy share link** puts the code into the
   URL (compressed), so a link opens exactly what you wrote. `#/playground?example=<id>` opens a
-  built-in example (`basic`, `nested`, `tabs`, `stepper`; see `src/playground/examples.ts`).
+  built-in example (`basic`, `nested`, `tabs`, `stepper`, `behavior`; see
+  `src/playground/examples.ts`). Besides the default export, the code may export `actions`
+  (buttons above the form) and `display` (values shown live), each a map of functions that
+  receive the reactive root form.
 
 ## Development
 

@@ -1,7 +1,7 @@
 {
   "name": "pathmodel-demo",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Quick start and playground for @aleksei-chernyi/pathmodel",
   "license": "MIT",

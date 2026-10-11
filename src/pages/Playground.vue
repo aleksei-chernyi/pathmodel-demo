@@ -44,11 +44,27 @@
             </span>
           </div>
 
+          <div v-if="actionNames.length" class="pg-toolbar pg-toolbar--actions">
+            <span class="pg-muted">Actions</span>
+            <button
+              v-for="name in actionNames"
+              :key="name"
+              class="pg-button pg-button--small"
+              @click="onAction(name)"
+            >
+              {{ name }}
+            </button>
+          </div>
+
           <div class="pg-form">
             <SchemaRenderer :key="runId" :nodes="nodes" :root="form" />
           </div>
 
           <div class="pg-panels">
+            <div v-if="displayValues" class="pg-panel pg-panel--wide">
+              <h2>Display <small>export const display</small></h2>
+              <pre>{{ json(displayValues) }}</pre>
+            </div>
             <div class="pg-panel">
               <h2>Value <small>getFormValue()</small></h2>
               <pre>{{ json(formValue) }}</pre>
@@ -78,7 +94,7 @@ import SchemaRenderer from "@aleksei-chernyi/pathmodel/src/template/SchemaRender
 import { FieldNode, FormBase, LayoutNode, SomeNode } from "@aleksei-chernyi/pathmodel"
 import Editor from "../playground/Editor.vue"
 import { Example, examples } from "../playground/examples"
-import { availableModules, PlaygroundError, run } from "../playground/runner"
+import { availableModules, FormFunctions, PlaygroundError, runModule } from "../playground/runner"
 import { decodeCode, encodeCode } from "../playground/share"
 
 const STORAGE_KEY = "pathmodel-demo:code"
@@ -112,6 +128,8 @@ async function initialCode(): Promise<string> {
 const code = ref("")
 const form = shallowRef<FormBase | null>(null)
 const nodes = shallowRef<SomeNode[]>([])
+const actions = shallowRef<FormFunctions>({})
+const display = shallowRef<FormFunctions>({})
 const error = ref<{ stage: string; message: string } | null>(null)
 const validationResult = ref<"valid" | "invalid" | null>(null)
 const runId = ref(0)
@@ -119,9 +137,12 @@ const shareLabel = ref("Copy share link")
 
 function rerun() {
   try {
-    const instance = reactive(run(code.value)) as FormBase
+    const module = runModule(code.value)
+    const instance = reactive(module.form) as FormBase
     nodes.value = instance.buildSchema()
     form.value = instance
+    actions.value = module.actions
+    display.value = module.display
     error.value = null
     validationResult.value = null
     runId.value++
@@ -173,6 +194,31 @@ async function onValidate() {
     error.value = { stage: "run", message: e instanceof Error ? e.message : String(e) }
   }
 }
+
+const actionNames = computed(() => Object.keys(actions.value))
+
+async function onAction(name: string) {
+  try {
+    await actions.value[name](form.value)
+  } catch (e) {
+    error.value = { stage: "run", message: e instanceof Error ? e.message : String(e) }
+  }
+}
+
+// Called inside a computed, so the panel follows every change the getters depend on.
+const displayValues = computed(() => {
+  const entries = Object.entries(display.value)
+  if (!form.value || !entries.length) return null
+  return Object.fromEntries(
+    entries.map(([name, read]) => {
+      try {
+        return [name, read(form.value)]
+      } catch (e) {
+        return [name, `Error: ${e instanceof Error ? e.message : String(e)}`]
+      }
+    })
+  )
+})
 
 onErrorCaptured((e) => {
   error.value = { stage: "run", message: e instanceof Error ? e.message : String(e) }

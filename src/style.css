@@ -141,6 +141,10 @@ pre {
   gap: 8px;
 }
 
+.pg-toolbar--actions {
+  flex-wrap: wrap;
+}
+
 .pg-button {
   border: 1px solid var(--pg-border);
   background: var(--pg-surface);
@@ -207,6 +211,10 @@ pre {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+}
+
+.pg-panel--wide {
+  grid-column: 1 / -1;
 }
 
 .pg-panel {

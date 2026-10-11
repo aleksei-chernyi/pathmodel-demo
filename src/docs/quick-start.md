@@ -3,6 +3,8 @@
 pathmodel describes the shape of your data as a **tree of TypeScript classes**. Each field is
 decorated with `@Schema` and bound to a **dot path** (`"address.city"`) in the resulting value.
 
+- The classes can hold behavior too: getters and methods that work on their own part of the
+  tree, re-rendered reactively (see **Models with behavior**).
 - Fields that share a dot path stay in sync, even across nested forms.
 - Validation errors are stored by dot path, so server errors map back onto fields.
 - `buildSchema()` turns the classes into a tree of layout and field nodes, and the bundled
@@ -153,6 +155,165 @@ form.getFormValue() // { email: "ada@example.com", address: { city: "London" } }
 Call `buildSchema()` before you read or write values: it fills the dot path map.
 
 [Try the basic example in the playground →](#/playground?example=basic)
+
+## Models with behavior
+
+A form class is an ordinary TypeScript class, so it can hold **behavior next to its data**:
+getters that derive values, and methods that change the class's own fields or call into its
+nested forms. Wrap the root in `reactive()` once, and every change made anywhere in the tree
+re-renders the form.
+
+Take a checkout with a shipping and a billing address, a "same as shipping" button, and a
+one-line label of the shipping address.
+
+### With a Pinia store
+
+The state is a plain object, and all behavior for the whole tree lives on the store:
+
+```ts
+// stores/checkout.ts
+import { defineStore } from "pinia"
+
+export const useCheckoutStore = defineStore("checkout", {
+  state: () => ({
+    shipping: { city: null as string | null, street: null as string | null },
+    billing: { city: null as string | null, street: null as string | null },
+    errors: {} as Record<string, string[]>,
+  }),
+  getters: {
+    shippingLabel: (state) =>
+      [state.shipping.street, state.shipping.city].filter(Boolean).join(", "),
+  },
+  actions: {
+    useShippingForBilling() {
+      this.billing = { ...this.shipping }
+    },
+    validate() {
+      // check each field yourself and fill `this.errors`
+    },
+  },
+})
+```
+
+Each field is written out in the template, with its own binding and error markup:
+
+```vue
+<template>
+  <fieldset>
+    <legend>Shipping</legend>
+    <label>City <input v-model="store.shipping.city" /></label>
+    <span v-if="store.errors['shipping.city']">{{ store.errors["shipping.city"][0] }}</span>
+    <label>Street <input v-model="store.shipping.street" /></label>
+    <!-- ...and the same again for billing -->
+  </fieldset>
+  <button @click="store.useShippingForBilling()">Same as shipping</button>
+  <p>Ships to: {{ store.shippingLabel }}</p>
+</template>
+```
+
+### With pathmodel
+
+Each part of the tree is a class that owns its fields, rules and behavior. The parent composes
+its children and calls their methods:
+
+```ts
+import { FormBase, FormOptions, Nested, Schema } from "@aleksei-chernyi/pathmodel"
+import Wrapper from "@aleksei-chernyi/pathmodel/src/layout/Wrapper.vue"
+import TextInput from "./TextInput.vue"
+
+// Behavior shared by both addresses. Dot paths are absolute, so each subclass declares its fields.
+abstract class AddressForm extends FormBase {
+  city!: string | null
+  street!: string | null
+
+  get label() {
+    return [this.street, this.city].filter(Boolean).join(", ")
+  }
+
+  copyFrom(other: AddressForm) {
+    this.city = other.city
+    this.street = other.street
+  }
+}
+
+@FormOptions({ title: "Shipping" })
+class ShippingForm extends AddressForm {
+  @Schema({ component: TextInput, dotPath: "shipping.city", props: { label: "City" } })
+  city!: string | null
+
+  @Schema({ component: TextInput, dotPath: "shipping.street", props: { label: "Street" } })
+  street!: string | null
+}
+
+@FormOptions({ title: "Billing" })
+class BillingForm extends AddressForm {
+  @Schema({ component: TextInput, dotPath: "billing.city", props: { label: "City" } })
+  city!: string | null
+
+  @Schema({ component: TextInput, dotPath: "billing.street", props: { label: "Street" } })
+  street!: string | null
+}
+
+export class CheckoutForm extends FormBase {
+  @Schema({ component: Wrapper, options: { title: "Shipping" } })
+  @Nested({ type: ShippingForm })
+  shipping!: ShippingForm
+
+  @Schema({ component: Wrapper, options: { title: "Billing" } })
+  @Nested({ type: BillingForm })
+  billing!: BillingForm
+
+  useShippingForBilling() {
+    this.billing.copyFrom(this.shipping)
+  }
+}
+```
+
+The template renders the whole tree and calls the model directly:
+
+```vue
+<script setup lang="ts">
+import { reactive } from "vue"
+import SchemaRenderer from "@aleksei-chernyi/pathmodel/src/template/SchemaRenderer.vue"
+import { CheckoutForm } from "./CheckoutForm"
+
+const form = reactive(new CheckoutForm({ title: "Checkout" }))
+const nodes = form.buildSchema()
+</script>
+
+<template>
+  <SchemaRenderer :nodes="nodes" :root="form" />
+  <button @click="form.useShippingForBilling()">Same as shipping</button>
+  <p>Ships to: {{ form.shipping.label }}</p>
+</template>
+```
+
+[Try it in the playground →](#/playground?example=behavior)
+
+### Comparison
+
+|            | Pinia store                                                | pathmodel                                                          |
+| ---------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
+| Data       | A plain object in `state`                                  | A tree of class instances; `getFormValue()` gives the plain object |
+| Behavior   | Getters and actions on the store, for the whole tree       | Getters and methods on the class that owns the data                |
+| Reuse      | Repeat the state shape and actions, or extract composables | Classes and base classes carry fields, rules and behavior together |
+| Rendering  | A binding and error markup per field in the template       | `buildSchema()` + `SchemaRenderer`                                 |
+| Validation | Your own code                                              | Field rules and a value schema; errors stored by dot path          |
+| Reactivity | The store is reactive                                      | `reactive(new Form())` makes the whole tree reactive               |
+| Scope      | App-wide shared state, with devtools, SSR and plugins      | One form or model                                                  |
+
+They don't exclude each other: a Pinia store is still the place for app-wide state, such as
+the value a form submitted.
+
+### Things to keep in mind
+
+- Call methods on the reactive form, not on the object you passed to `reactive()`. A change
+  made through the raw object updates the value but doesn't re-render.
+- A plain assignment like `this.city = "London"` changes one field. To also clear that dot
+  path's error and update other fields that share the dot path, use
+  `await this.root.setValueByDotPath("shipping.city", "London")`.
+- Dot paths are absolute, so a class belongs to one place in the value. Share behavior
+  between places through a base class, as `AddressForm` does above.
 
 ## Decorators
 
