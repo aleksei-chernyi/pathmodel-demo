@@ -1,11 +1,5 @@
-import {
-  FormCase,
-  FormSwitch,
-  FormOptions,
-  Schema,
-  NestedArray,
-  Stepper,
-} from "@aleksei-chernyi/pathmodel"
+import { FormCase, FormSwitch, FormOptions, Schema, NestedArray } from "@aleksei-chernyi/pathmodel"
+import Stepper from "@aleksei-chernyi/pathmodel/src/layout/Stepper.vue"
 import { TextInput, Select } from "@aleksei-chernyi/pathmodel/fields"
 import { z } from "zod"
 

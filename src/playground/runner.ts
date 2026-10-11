@@ -2,11 +2,8 @@ import ts from "typescript"
 import * as vue from "vue"
 import * as zod from "zod"
 import { FormBase } from "@aleksei-chernyi/pathmodel"
-import * as pathmodel from "./modules/pathmodel"
+import { layouts, pathmodel } from "./modules/pathmodel"
 import * as fields from "./modules/fields"
-
-const { Row, Col, Wrapper, Switch, Stepper, Case, Empty } = pathmodel
-const layouts = { Row, Col, Wrapper, Switch, Stepper, Case, Empty }
 
 const LIBRARY = "@aleksei-chernyi/pathmodel"
 
@@ -16,7 +13,8 @@ const modules: Record<string, unknown> = {
   ...Object.fromEntries(
     Object.entries(layouts).map(([name, component]) => [
       `${LIBRARY}/src/layout/${name}.vue`,
-      { default: component },
+      // `__esModule` stops the compiled default import from wrapping it a second time.
+      { __esModule: true, default: component },
     ])
   ),
   [`${LIBRARY}/fields`]: fields,

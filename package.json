@@ -19,7 +19,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@aleksei-chernyi/pathmodel": "^0.1.1",
+    "@aleksei-chernyi/pathmodel": "^0.2.0",
     "@codemirror/commands": "^6.8.1",
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/view": "^6.38.0",

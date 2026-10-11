@@ -1,11 +1,5 @@
-import {
-  FormCase,
-  FormSwitch,
-  FormOptions,
-  Schema,
-  NestedArray,
-  Switch,
-} from "@aleksei-chernyi/pathmodel"
+import { FormCase, FormSwitch, FormOptions, Schema, NestedArray } from "@aleksei-chernyi/pathmodel"
+import Switch from "@aleksei-chernyi/pathmodel/src/layout/Switch.vue"
 import { TextInput } from "@aleksei-chernyi/pathmodel/fields"
 import { z } from "zod"
 

@@ -1,4 +1,5 @@
-import { FormBase, FormOptions, Schema, Nested, Wrapper, Row } from "@aleksei-chernyi/pathmodel"
+import { FormBase, FormOptions, Schema, Nested } from "@aleksei-chernyi/pathmodel"
+import Wrapper from "@aleksei-chernyi/pathmodel/src/layout/Wrapper.vue"
 import { TextInput } from "@aleksei-chernyi/pathmodel/fields"
 import { z } from "zod"
 

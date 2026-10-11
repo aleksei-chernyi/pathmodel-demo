@@ -129,7 +129,8 @@ import { reactive } from "vue"
 import SchemaRenderer from "@aleksei-chernyi/pathmodel/src/template/SchemaRenderer.vue"
 import { UserForm } from "./UserForm"
 
-const form = reactive(new UserForm({ title: "User" }))
+// `reactive()` returns an unwrapped type; the cast keeps the class type for `:root`.
+const form = reactive(new UserForm({ title: "User" })) as UserForm
 const nodes = form.buildSchema()
 
 async function submit() {
@@ -277,7 +278,7 @@ import { reactive } from "vue"
 import SchemaRenderer from "@aleksei-chernyi/pathmodel/src/template/SchemaRenderer.vue"
 import { CheckoutForm } from "./CheckoutForm"
 
-const form = reactive(new CheckoutForm({ title: "Checkout" }))
+const form = reactive(new CheckoutForm({ title: "Checkout" })) as CheckoutForm
 const nodes = form.buildSchema()
 </script>
 

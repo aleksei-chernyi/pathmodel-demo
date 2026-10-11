@@ -1,4 +1,5 @@
-import { FormBase, FormOptions, Nested, Schema, Wrapper } from "@aleksei-chernyi/pathmodel"
+import { FormBase, FormOptions, Nested, Schema } from "@aleksei-chernyi/pathmodel"
+import Wrapper from "@aleksei-chernyi/pathmodel/src/layout/Wrapper.vue"
 import { TextInput } from "@aleksei-chernyi/pathmodel/fields"
 
 // Behavior shared by both addresses. Dot paths are absolute, so each subclass declares its fields.

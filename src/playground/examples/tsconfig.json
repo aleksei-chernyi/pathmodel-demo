@@ -1,10 +1,10 @@
 {
-  // Type-checks the playground examples against the modules the playground gives them
-  // (../modules), not the plain package. A tsconfig.json here, so IDEs use it for these files.
+  // Type-checks the playground examples. The playground's field components are offered as
+  // "@aleksei-chernyi/pathmodel/fields" (../modules/fields.ts). A tsconfig.json here, so IDEs
+  // use it for these files.
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@aleksei-chernyi/pathmodel": ["../modules/pathmodel.ts"],
       "@aleksei-chernyi/pathmodel/fields": ["../modules/fields.ts"]
     }
   },

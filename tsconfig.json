@@ -9,10 +9,7 @@
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
-    "paths": {
-      "@aleksei-chernyi/pathmodel": ["./node_modules/@aleksei-chernyi/pathmodel/src/index.ts"]
-    }
+    "types": ["vite/client"]
   },
   "include": ["src"],
   "exclude": ["src/playground/examples"]

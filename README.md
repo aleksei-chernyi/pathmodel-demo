@@ -26,15 +26,15 @@ npm run format     # Prettier (CI runs format:check)
 ```
 
 The playground examples are real files in `src/playground/examples/`, loaded as text with
-`?raw`, so Prettier formats them and `typecheck` checks them against the modules the playground
-offers (`src/playground/modules/`, see `src/playground/examples/tsconfig.json`).
+`?raw`, so Prettier formats them and `typecheck` checks them like app code. Their one
+playground-only import, `@aleksei-chernyi/pathmodel/fields`, maps to the demo's field components
+(`src/playground/modules/fields.ts`, see `src/playground/examples/tsconfig.json`).
 
 ## The library
 
 The demo uses the published [`@aleksei-chernyi/pathmodel`](https://www.npmjs.com/package/@aleksei-chernyi/pathmodel)
-package. Its layout and template components (`src/**/*.vue`) import the library's TypeScript
-source, so `vite.config.ts` resolves the package root to `src/index.ts` as well; that keeps a
-single copy of the library in the bundle. To update it, run `npm install @aleksei-chernyi/pathmodel@latest`.
+package with no special setup beyond the decorator options its README asks for. To update it,
+run `npm install @aleksei-chernyi/pathmodel@latest`.
 
 ## Deploy
 
